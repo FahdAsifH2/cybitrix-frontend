@@ -13,7 +13,7 @@ import ForgetPwd from "@/components/ForgetPwd";
 import ResetPwd from "@/components/ResetPwd";
 import { useEffect } from "react";
 import useUser from "@/context/User/UserHook";
-
+import "./index.css";
 function App() {
   const { user } = useUser();
   const navigate = useNavigate();

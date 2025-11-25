@@ -38,7 +38,7 @@ const Login = () => {
     if (!email || !pwd) return;
     try {
       setIsLoading(true);
-      const res = await axios.post("/auth/login", {
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
         email: email,
         password: pwd,
         rememberMe: rememberMe,
@@ -67,7 +67,7 @@ const Login = () => {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
-                placeholder="moeezali2375@gmail.com"
+                placeholder="fahdasif51@gmail.com"
                 type="email"
                 required
                 value={email}

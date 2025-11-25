@@ -28,12 +28,12 @@ const Header = () => {
 
   return (
     <header className="top-0  flex h-16 items-center gap-4 border-b px-4 md:px-6 sticky top-0 z-50 w-full border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+      <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm  lg:gap-6 h-16">
         <Link
           to="/"
-          className="flex items-center gap-2 text-lg font-semibold md:text-base"
+          className="flex items-center gap-2 text-lg font-semibold md:text-base whitespace-nowrap"
         >
-          MERN
+          {user ? `Welcome, ${user.name}` : "Welcome"}
           <span className="sr-only">MERN</span>
         </Link>
         {/* <Link
@@ -54,10 +54,10 @@ const Header = () => {
           <nav className="grid gap-6 text-lg font-medium">
             <Link
               to="/"
-              className="flex items-center gap-2 text-lg font-semibold"
+              className="flex items-cente   r gap-2 text-lg font-semibold"
             >
-              MERN
-              <span className="sr-only">MERN</span>
+              welcome
+              <span className="sr-only">welcome</span>
             </Link>
             <Link
               to="#"
