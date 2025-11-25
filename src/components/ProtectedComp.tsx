@@ -22,13 +22,15 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { io } from "socket.io-client";
+import useUser from "@/context/User/UserHook";
 
 const MatchmakingLobby = () => {
+  const { user: _user, logout: _logout } = useUser();
+
   const [socket, setSocket] = useState(null);
   const [onlineCount, setOnlineCount] = useState(0);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [inQueue, setInQueue] = useState(false);
-  const [currentUser, setCurrentUser] = useState({ name: "Guest" });
   const [matchFound, setMatchFound] = useState(false);
   const [matchData, setMatchData] = useState(null);
   const [gameRoom, setGameRoom] = useState(null);
@@ -49,27 +51,43 @@ const MatchmakingLobby = () => {
   }, [messages]);
 
   useEffect(() => {
-    const userInfo = localStorage.getItem("userInfo");
+    // Get username and token from localStorage or _user
+    let userName = "Guest";
     let token = null;
 
+    const userInfo = localStorage.getItem("userInfo");
     if (userInfo) {
       const user = JSON.parse(userInfo);
-      setCurrentUser({ name: user.username || user.name || "Guest" });
+      userName = user.name || user.username || "Guest";
       token = user.token;
     }
 
+    // Override with _user if available
+    if (_user && _user.name) {
+      userName = _user.name;
+    }
+    if (_user && _user.token) {
+      token = _user.token;
+    }
+
+    console.log("🔵 Connecting with username:", userName);
+    console.log("🔑 Token available:", token ? "Yes" : "No");
+
     const newSocket = io("http://localhost:5000", {
-      auth: { token: token || "demo-token" },
+      auth: {
+        token: token || "demo-token",
+      },
     });
 
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
-      console.log("Connected to server");
+      console.log("✅ Connected to server - Socket ID:", newSocket.id);
+      console.log("👤 User name being used:", userName);
     });
 
     newSocket.on("user-data", (data) => {
-      setCurrentUser({ name: data.name });
+      console.log("📨 Received user-data from server:", data);
     });
 
     newSocket.on("online-users", (data) => {
@@ -78,6 +96,7 @@ const MatchmakingLobby = () => {
     });
 
     newSocket.on("new-message", (message) => {
+      console.log("📨 Received new message:", message);
       setMessages((prev) => [...prev, message]);
     });
 
@@ -123,7 +142,7 @@ const MatchmakingLobby = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, [_user]);
 
   const handleJoinQueue = () => {
     if (socket) {
@@ -141,7 +160,20 @@ const MatchmakingLobby = () => {
 
   const handleSendMessage = () => {
     if (socket && messageInput.trim()) {
-      socket.emit("send-message", { text: messageInput });
+      // Get the username to send
+      const userName = _user?.name || "Guest";
+
+      console.log("📤 Sending message with username:", userName);
+
+      const newMessage = {
+        text: messageInput,
+        username: userName,
+      };
+
+      // Emit to server - server will broadcast to all clients including sender
+      socket.emit("send-message", newMessage);
+
+      // Clear input
       setMessageInput("");
     }
   };
@@ -312,7 +344,9 @@ const MatchmakingLobby = () => {
                 </Avatar>
                 <div>
                   <h1 className="text-2xl font-bold text-white">Game Lobby</h1>
-                  <p className="text-gray-400">Welcome, {currentUser.name}</p>
+                  <p className="text-gray-400">
+                    Welcome, {_user?.name || "Guest"}
+                  </p>
                 </div>
               </div>
               <Badge
@@ -437,14 +471,15 @@ const MatchmakingLobby = () => {
                         No messages yet. Start chatting!
                       </p>
                     )}
-                    {messages.map((msg) => (
-                      <div key={msg.id} className="text-sm">
+                    {messages.map((msg, index) => (
+                      <div key={msg.id || index} className="text-sm">
                         <span className="font-bold text-blue-400">
                           {msg.username}:{" "}
                         </span>
                         <span className="text-gray-300">{msg.text}</span>
                       </div>
                     ))}
+
                     <div ref={messagesEndRef} />
                   </div>
                   <div className="flex gap-2">
