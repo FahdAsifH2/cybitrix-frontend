@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Users,
   Play,
@@ -33,7 +33,7 @@ const MatchmakingLobby = () => {
   const [inQueue, setInQueue] = useState(false);
   const [matchFound, setMatchFound] = useState(false);
   const [matchData, setMatchData] = useState(null);
-  const [gameRoom, setGameRoom] = useState(null);
+  const [_gameRoom, setGameRoom] = useState(null);
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const [selectedMove, setSelectedMove] = useState(null);
