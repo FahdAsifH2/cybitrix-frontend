@@ -37,6 +37,7 @@ function App() {
               path="/email/verify/:token"
               element={<ChangeEmailVerification />}
             />
+
             <Route path="/home" element={<ProtectedComp />} />
           </Route>
         </Route>
