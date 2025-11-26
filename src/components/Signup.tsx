@@ -94,7 +94,7 @@ const Signup = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="moeezali2375@gmail.com"
+                placeholder="fahdasif51@gmail.com"
                 autoCorrect="off"
                 spellCheck="false"
                 required
