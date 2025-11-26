@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoaderCircle } from "lucide-react";
 import PwdInput from "@/components/PwdInput";
-
+import { API_URL } from "@/components/api";
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -47,7 +47,7 @@ const Signup = () => {
     try {
       console.log(name, email, pwd);
       setIsLoading(true);
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await axios.post(`${API_URL}/api/auth/register`, {
         name: name,
         email: email,
         password: pwd,
