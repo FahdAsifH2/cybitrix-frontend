@@ -22,7 +22,7 @@ import useAxios from "@/hooks/useAxios";
 import useUser from "@/context/User/UserHook";
 import { useEffect, useRef, useState } from "react";
 import { LoaderCircle } from "lucide-react";
-
+import { API_URL } from "@/components/api";
 const FormSchema = z.object({
   pin: z.string().min(6, {
     message: "Your one-time password must be 6 characters.",
@@ -57,7 +57,7 @@ export function VerificationForm() {
   const handleResend = async () => {
     setIsLoading2(true);
     try {
-      await axios.get("/auth/token/regenerate");
+      await axios.get(`${API_URL}/api/auth/token/regenerate`);
     } catch (error) {
       console.log(error);
     } finally {
@@ -68,7 +68,7 @@ export function VerificationForm() {
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     setIsLoading(true);
     try {
-      const url = "/auth/token/verify/" + data.pin;
+      const url = `${API_URL}/api/auth/token/verify/${data.pin}`;
       toast({
         title: "You submitted the following values:",
         description: (
