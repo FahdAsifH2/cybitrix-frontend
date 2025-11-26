@@ -73,7 +73,7 @@ const MatchmakingLobby = () => {
     console.log("🔵 Connecting with username:", userName);
     console.log("🔑 Token available:", token ? "Yes" : "No");
 
-    const newSocket = io("http://localhost:5000", {
+    const newSocket = io("https://fahd.gpa.com.pk", {
       auth: {
         token: token || "demo-token",
       },
